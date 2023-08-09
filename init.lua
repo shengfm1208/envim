@@ -1,34 +1,3 @@
--- vi 通用设置
--- vim.cmd[[
---     let mapleader = ","      " 定义<leader>键
---     set autoindent           " 设置自动缩进
---     set cindent              " 设置使用C/C++语言的自动缩进方式
---     set cinoptions=g0,:0,N-s,(0    " 设置C/C++语言的具体缩进方式
---     set smartindent          " 智能的选择对其方式
---     filetype indent on       " 自适应不同语言的智能缩进
---     set expandtab            " 将制表符扩展为空格
---     set tabstop=4            " 设置编辑时制表符占用空格数
---     set shiftwidth=4         " 设置格式化时制表符占用空格数
---     set softtabstop=4        " 设置4个空格为制表符
---     set smarttab             " 在行和段开始处使用制表符
---     set nowrap               " 禁止折行
---     set backspace=2          " 使用回车键正常处理indent,eol,start等
---     set sidescroll=10        " 设置向右滚动字符数
---     set nofoldenable         " 禁用折叠代码
---     set langmenu=zh_CN.UTF-8
---     set helplang=cn
---     set termencoding=utf-8
---     set encoding=utf8
---     set fileencodings=utf8,ucs-bom,gbk,cp936,gb2312,gb18030
---     nnoremap <c-j> <c-w>j
---     nnoremap <c-k> <c-w>k
---     nnoremap <c-h> <c-w>h
---     nnoremap <c-l> <c-w>l
---     let g:ycm_clangd_uses_ycmd_caching = 0
---     let g:ycm_clangd_binary_path = exepath("clangd")
--- 
--- ]]
-
 vim.g.mapleader = ','
 vim.g.maplocalleader = ','
 
@@ -86,6 +55,16 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
+-- 设置窗口跳转
+vim.cmd [[
+  nnoremap <c-j> <c-w>j
+  nnoremap <c-k> <c-w>k
+  nnoremap <c-h> <c-w>h
+  nnoremap <c-l> <c-w>l
+]]
+
+vim.keymap.set('n', '<leader>l', function() require("lazy").home() end, {desc = "lazy home"})
+
 
 
 require("noice").setup({
@@ -108,12 +87,12 @@ require("noice").setup({
 })
 
 -- Lua
-vim.keymap.set("n", "<leader>xx", function() require("trouble").open() end)
-vim.keymap.set("n", "<leader>xw", function() require("trouble").open("workspace_diagnostics") end)
-vim.keymap.set("n", "<leader>xd", function() require("trouble").open("document_diagnostics") end)
-vim.keymap.set("n", "<leader>xq", function() require("trouble").open("quickfix") end)
-vim.keymap.set("n", "<leader>xl", function() require("trouble").open("loclist") end)
-vim.keymap.set("n", "gR", function() require("trouble").open("lsp_references") end)
+vim.keymap.set("n", "<leader>xx", function() require("trouble").open() end, {desc= "open trouble"})
+vim.keymap.set("n", "<leader>xw", function() require("trouble").open("workspace_diagnostics") end, {desc = "workspace_diagnostics"})
+vim.keymap.set("n", "<leader>xd", function() require("trouble").open("document_diagnostics") end, {desc = "document_diagnostics"})
+vim.keymap.set("n", "<leader>xq", function() require("trouble").open("quickfix") end, {desc = "quickfix"})
+vim.keymap.set("n", "<leader>xl", function() require("trouble").open("loclist") end, {desc = "loclist"})
+vim.keymap.set("n", "gR", function() require("trouble").open("lsp_references") end, {desc = "lsp_references"})
 
 
 -- [[ Configure Telescope ]]
@@ -164,11 +143,13 @@ vim.keymap.set('n', '<leader>/', function()
 end, { desc = '[/] Fuzzily search in current buffer' })
 
 vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
-vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
+vim.keymap.set('n', '<leader>f', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
+
+
 
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
@@ -199,7 +180,8 @@ local on_attach = function(_, bufnr)
 
   -- See `:help K` for why this keymap
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-  nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+  -- nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+  nmap('<leader>k', vim.lsp.buf.signature_help, 'Signature Documentation')
 
   -- Lesser used LSP functionality
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
@@ -214,38 +196,6 @@ local on_attach = function(_, bufnr)
     vim.lsp.buf.format()
   end, { desc = 'Format current buffer with LSP' })
 end
-
--- 配置LSP
-local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
-local servers = require("servers")
-
-for server, opts in pairs(servers) do
-    opts.capabilities = capabilities
-    require("lspconfig")[server].setup(opts)
-end
-require('neodev').setup()
-
--- nvim-cmp supports additional completion capabilities, so broadcast that to servers
--- local capabilities = vim.lsp.protocol.make_client_capabilities()
--- capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
-
--- Ensure the servers above are installed
-local mason_lspconfig = require 'mason-lspconfig'
-
-mason_lspconfig.setup {
-  ensure_installed = vim.tbl_keys(servers),
-}
-
-mason_lspconfig.setup_handlers {
-  function(server_name)
-    require('lspconfig')[server_name].setup {
-      capabilities = capabilities,
-      on_attach = on_attach,
-      settings = servers[server_name],
-      filetypes = (servers[server_name] or {}).filetypes,
-    }
-  end
-}
 
 require('tabnine').setup({
   disable_auto_comment=true,
@@ -319,11 +269,126 @@ cmp.setup.cmdline(':', {
   })
 })
 
--- Set up lspconfig.
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
--- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
-require('lspconfig')['<YOUR_LSP_SERVER>'].setup {
-  capabilities = capabilities
+
+
+-- 配置LSP
+local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
+local servers = require("servers")
+
+for server, opts in pairs(servers) do
+    opts.capabilities = capabilities
+    require("lspconfig")[server].setup(opts)
+end
+require('neodev').setup()
+
+-- nvim-cmp supports additional completion capabilities, so broadcast that to servers
+-- local capabilities = vim.lsp.protocol.make_client_capabilities()
+-- capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+
+-- Ensure the servers above are installed
+local mason_lspconfig = require 'mason-lspconfig'
+
+mason_lspconfig.setup {
+  ensure_installed = vim.tbl_keys(servers),
+}
+
+mason_lspconfig.setup_handlers {
+  function(server_name)
+    require('lspconfig')[server_name].setup {
+      capabilities = capabilities,
+      on_attach = on_attach,
+      settings = servers[server_name],
+      filetypes = (servers[server_name] or {}).filetypes,
+    }
+  end
 }
 
 
+
+require'nvim-web-devicons'.setup {
+ -- your personnal icons can go here (to override)
+ -- you can specify color or cterm_color instead of specifying both of them
+ -- DevIcon will be appended to `name`
+ override = {
+  zsh = {
+    icon = "",
+    color = "#428850",
+    cterm_color = "65",
+    name = "Zsh"
+  }
+ };
+ -- globally enable different highlight colors per icon (default to true)
+ -- if set to false all icons will have the default icon's color
+ color_icons = true;
+ -- globally enable default icons (default to false)
+ -- will get overriden by `get_icons` option
+ default = true;
+ -- globally enable "strict" selection of icons - icon will be looked up in
+ -- different tables, first by filename, and if not found by extension; this
+ -- prevents cases when file doesn't have any extension but still gets some icon
+ -- because its name happened to match some extension (default to false)
+ strict = true;
+ -- same as `override` but specifically for overrides by filename
+ -- takes effect when `strict` is true
+ override_by_filename = {
+  [".gitignore"] = {
+    icon = "",
+    color = "#f1502f",
+    name = "Gitignore"
+  }
+ };
+ -- same as `override` but specifically for overrides by extension
+ -- takes effect when `strict` is true
+ override_by_extension = {
+  ["log"] = {
+    icon = "",
+    color = "#81e043",
+    name = "Log"
+  }
+ };
+}
+
+
+
+
+require'nvim-treesitter.configs'.setup {
+  -- A list of parser names, or "all" (the five listed parsers should always be installed)
+  ensure_installed = { "c", "lua", "vim", "vimdoc", "query" },
+
+  -- Install parsers synchronously (only applied to `ensure_installed`)
+  sync_install = false,
+
+  -- Automatically install missing parsers when entering buffer
+  -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
+  auto_install = true,
+
+  -- List of parsers to ignore installing (for "all")
+  ignore_install = { "javascript" },
+
+  ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
+  -- parser_install_dir = "/some/path/to/store/parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
+
+  highlight = {
+    enable = true,
+
+    -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
+    -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
+    -- the name of the parser)
+    -- list of language that will be disabled
+    disable = { "c", "rust" },
+    -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
+    disable = function(lang, buf)
+        local max_filesize = 100 * 1024 -- 100 KB
+        local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+        if ok and stats and stats.size > max_filesize then
+            return true
+        end
+    end,
+
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
+}
