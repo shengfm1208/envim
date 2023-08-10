@@ -57,13 +57,23 @@ vim.o.termguicolors = true
 
 -- 设置窗口跳转
 vim.cmd [[
-  nnoremap <c-j> <c-w>j
-  nnoremap <c-k> <c-w>k
-  nnoremap <c-h> <c-w>h
-  nnoremap <c-l> <c-w>l
+  tnoremap <A-h> <C-\><C-N><C-w>h
+  tnoremap <A-j> <C-\><C-N><C-w>j
+  tnoremap <A-k> <C-\><C-N><C-w>k
+  tnoremap <A-l> <C-\><C-N><C-w>l
+  inoremap <A-h> <C-\><C-N><C-w>h
+  inoremap <A-j> <C-\><C-N><C-w>j
+  inoremap <A-k> <C-\><C-N><C-w>k
+  inoremap <A-l> <C-\><C-N><C-w>l
+  nnoremap <A-h> <C-w>h
+  nnoremap <A-j> <C-w>j
+  nnoremap <A-k> <C-w>k
+  nnoremap <A-l> <C-w>l 
 ]]
 
 vim.keymap.set('n', '<leader>l', function() require("lazy").home() end, {desc = "lazy home"})
+vim.keymap.set('n', '<leader>t', function() vim.cmd[[:terminal]] end, {desc = "open terminal"})
+vim.keymap.set('n', '<leader>e', function() vim.cmd[[:e ~/.config/nvim/init.lua]] end, {desc = "edit init.lua"})
 
 
 
