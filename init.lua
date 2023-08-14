@@ -68,12 +68,12 @@ vim.cmd [[
   nnoremap <A-h> <C-w>h
   nnoremap <A-j> <C-w>j
   nnoremap <A-k> <C-w>k
-  nnoremap <A-l> <C-w>l 
+  nnoremap <A-l> <C-w>l
 ]]
 
-vim.keymap.set('n', '<leader>l', function() require("lazy").home() end, {desc = "lazy home"})
-vim.keymap.set('n', '<leader>t', function() vim.cmd[[:terminal]] end, {desc = "open terminal"})
-vim.keymap.set('n', '<leader>e', function() vim.cmd[[:e ~/.config/nvim/init.lua]] end, {desc = "edit init.lua"})
+vim.keymap.set('n', '<leader>l', function() require("lazy").home() end, { desc = "lazy home" })
+vim.keymap.set('n', '<leader>t', function() vim.cmd [[:terminal]] end, { desc = "open terminal" })
+vim.keymap.set('n', '<leader>e', function() vim.cmd [[:e ~/.config/nvim/init.lua]] end, { desc = "edit init.lua" })
 
 
 
@@ -88,26 +88,27 @@ require("noice").setup({
   },
   -- you can enable a preset for easier configuration
   presets = {
-    bottom_search = true, -- use a classic bottom cmdline for search
-    command_palette = true, -- position the cmdline and popupmenu together
+    bottom_search = true,         -- use a classic bottom cmdline for search
+    command_palette = true,       -- position the cmdline and popupmenu together
     long_message_to_split = true, -- long messages will be sent to a split
-    inc_rename = false, -- enables an input dialog for inc-rename.nvim
-    lsp_doc_border = false, -- add a border to hover docs and signature help
+    inc_rename = false,           -- enables an input dialog for inc-rename.nvim
+    lsp_doc_border = false,       -- add a border to hover docs and signature help
   },
 })
 
 -- Lua
-vim.keymap.set("n", "<leader>xx", function() require("trouble").open() end, {desc= "open trouble"})
-vim.keymap.set("n", "<leader>xw", function() require("trouble").open("workspace_diagnostics") end, {desc = "workspace_diagnostics"})
-vim.keymap.set("n", "<leader>xd", function() require("trouble").open("document_diagnostics") end, {desc = "document_diagnostics"})
-vim.keymap.set("n", "<leader>xq", function() require("trouble").open("quickfix") end, {desc = "quickfix"})
-vim.keymap.set("n", "<leader>xl", function() require("trouble").open("loclist") end, {desc = "loclist"})
-vim.keymap.set("n", "gR", function() require("trouble").open("lsp_references") end, {desc = "lsp_references"})
-
+vim.keymap.set("n", "<leader>xx", function() require("trouble").open() end, { desc = "open trouble" })
+vim.keymap.set("n", "<leader>xw", function() require("trouble").open("workspace_diagnostics") end,
+  { desc = "workspace_diagnostics" })
+vim.keymap.set("n", "<leader>xd", function() require("trouble").open("document_diagnostics") end,
+  { desc = "document_diagnostics" })
+vim.keymap.set("n", "<leader>xq", function() require("trouble").open("quickfix") end, { desc = "quickfix" })
+vim.keymap.set("n", "<leader>xl", function() require("trouble").open("loclist") end, { desc = "loclist" })
+vim.keymap.set("n", "gR", function() require("trouble").open("lsp_references") end, { desc = "lsp_references" })
 
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
-require('telescope').setup{
+require('telescope').setup {
   defaults = {
     -- Default configuration for telescope goes here:
     -- config_key = value,
@@ -156,7 +157,7 @@ vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc
 vim.keymap.set('n', '<leader>f', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
+vim.keymap.set('n', '<leader>F', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 
 
@@ -187,6 +188,7 @@ local on_attach = function(_, bufnr)
   nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
   nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
   nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+  -- nmap('<leader>wx', require('telescope.builtin').builtin, '[W]orkspace [S]ymbols')
 
   -- See `:help K` for why this keymap
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
@@ -208,17 +210,17 @@ local on_attach = function(_, bufnr)
 end
 
 require('tabnine').setup({
-  disable_auto_comment=true,
-  accept_keymap="<Tab>",
+  disable_auto_comment = true,
+  accept_keymap = "<Tab>",
   dismiss_keymap = "<C-]>",
   debounce_ms = 800,
-  suggestion_color = {gui = "#808080", cterm = 244},
-  exclude_filetypes = {"TelescopePrompt"},
+  suggestion_color = { gui = "#808080", cterm = 244 },
+  exclude_filetypes = { "TelescopePrompt" },
   log_file_path = nil, -- absolute path to Tabnine log file
 })
 
 
-local cmp = require'cmp'
+local cmp = require 'cmp'
 
 cmp.setup({
   snippet = {
@@ -286,8 +288,8 @@ local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protoc
 local servers = require("servers")
 
 for server, opts in pairs(servers) do
-    opts.capabilities = capabilities
-    require("lspconfig")[server].setup(opts)
+  opts.capabilities = capabilities
+  require("lspconfig")[server].setup(opts)
 end
 require('neodev').setup()
 
@@ -315,53 +317,53 @@ mason_lspconfig.setup_handlers {
 
 
 
-require'nvim-web-devicons'.setup {
- -- your personnal icons can go here (to override)
- -- you can specify color or cterm_color instead of specifying both of them
- -- DevIcon will be appended to `name`
- override = {
-  zsh = {
-    icon = "",
-    color = "#428850",
-    cterm_color = "65",
-    name = "Zsh"
-  }
- };
- -- globally enable different highlight colors per icon (default to true)
- -- if set to false all icons will have the default icon's color
- color_icons = true;
- -- globally enable default icons (default to false)
- -- will get overriden by `get_icons` option
- default = true;
- -- globally enable "strict" selection of icons - icon will be looked up in
- -- different tables, first by filename, and if not found by extension; this
- -- prevents cases when file doesn't have any extension but still gets some icon
- -- because its name happened to match some extension (default to false)
- strict = true;
- -- same as `override` but specifically for overrides by filename
- -- takes effect when `strict` is true
- override_by_filename = {
-  [".gitignore"] = {
-    icon = "",
-    color = "#f1502f",
-    name = "Gitignore"
-  }
- };
- -- same as `override` but specifically for overrides by extension
- -- takes effect when `strict` is true
- override_by_extension = {
-  ["log"] = {
-    icon = "",
-    color = "#81e043",
-    name = "Log"
-  }
- };
+require 'nvim-web-devicons'.setup {
+  -- your personnal icons can go here (to override)
+  -- you can specify color or cterm_color instead of specifying both of them
+  -- DevIcon will be appended to `name`
+  override = {
+    zsh = {
+      icon = "",
+      color = "#428850",
+      cterm_color = "65",
+      name = "Zsh"
+    }
+  },
+  -- globally enable different highlight colors per icon (default to true)
+  -- if set to false all icons will have the default icon's color
+  color_icons = true,
+  -- globally enable default icons (default to false)
+  -- will get overriden by `get_icons` option
+  default = true,
+  -- globally enable "strict" selection of icons - icon will be looked up in
+  -- different tables, first by filename, and if not found by extension; this
+  -- prevents cases when file doesn't have any extension but still gets some icon
+  -- because its name happened to match some extension (default to false)
+  strict = true,
+  -- same as `override` but specifically for overrides by filename
+  -- takes effect when `strict` is true
+  override_by_filename = {
+    [".gitignore"] = {
+      icon = "",
+      color = "#f1502f",
+      name = "Gitignore"
+    }
+  },
+  -- same as `override` but specifically for overrides by extension
+  -- takes effect when `strict` is true
+  override_by_extension = {
+    ["log"] = {
+      icon = "",
+      color = "#81e043",
+      name = "Log"
+    }
+  },
 }
 
 
 
 
-require'nvim-treesitter.configs'.setup {
+require 'nvim-treesitter.configs'.setup {
   -- A list of parser names, or "all" (the five listed parsers should always be installed)
   ensure_installed = { "c", "lua", "vim", "vimdoc", "query" },
 
@@ -388,11 +390,11 @@ require'nvim-treesitter.configs'.setup {
     disable = { "c", "rust" },
     -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
     disable = function(lang, buf)
-        local max_filesize = 100 * 1024 -- 100 KB
-        local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-        if ok and stats and stats.size > max_filesize then
-            return true
-        end
+      local max_filesize = 100 * 1024   -- 100 KB
+      local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+      if ok and stats and stats.size > max_filesize then
+        return true
+      end
     end,
 
     -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
