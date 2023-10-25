@@ -1,6 +1,7 @@
 return {
-    bashls = {},
+    -- bashls = {},
     clangd = {},
+    cmake = {},
     -- jdtls = {},
     -- cssls = {},
     -- dockerls = {},
@@ -8,7 +9,7 @@ return {
     -- svelte = {},
     -- eslint = {},
     -- html = {},
-    -- pyright = {},
+    pyright = {},
     -- sumneko_lua = {},
     -- yamlls = {},
     -- tailwindcss = {},

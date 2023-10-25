@@ -15,6 +15,16 @@ end
 vim.opt.rtp:prepend(lazypath)
 require("lazy").setup("plugins")
 
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'sh',
+  callback = function()
+    vim.lsp.start({
+      name = 'bash-language-server',
+      cmd = { 'bash-language-server', 'start' },
+    })
+  end,
+})
+
 ---------------------------------------------------------------------
 --- 设置
 ---------------------------------------------------------------------
@@ -54,6 +64,13 @@ vim.o.completeopt = 'menuone,noselect'
 
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
+
+vim.cmd [[
+  set expandtab            " 将制表符扩展为空格
+  set tabstop=4            " 设置编辑时制表符占用空格数
+  set shiftwidth=4         " 设置格式化时制表符占用空格数
+  set softtabstop=4        " 设置4个空格为制表符
+]]
 
 -- 设置窗口跳转
 vim.cmd [[
@@ -96,6 +113,33 @@ require("noice").setup({
   },
 })
 
+
+------------- begin nvim tree
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- set termguicolors to enable highlight groups
+vim.opt.termguicolors = true
+
+-- empty setup using defaults
+-- require("nvim-tree").setup()
+
+-- OR setup with some options
+require("nvim-tree").setup({
+  sort_by = "case_sensitive",
+  view = {
+    width = 30,
+  },
+  renderer = {
+    group_empty = true,
+  },
+  filters = {
+    dotfiles = true,
+  },
+})
+vim.keymap.set("n", "<leader>b", function() vim.cmd [[:NvimTreeToggle]] end, { desc = "open or close tree" })
+------------- end nvim tree
+
 -- Lua
 vim.keymap.set("n", "<leader>xx", function() require("trouble").open() end, { desc = "open trouble" })
 vim.keymap.set("n", "<leader>xw", function() require("trouble").open("workspace_diagnostics") end,
@@ -128,7 +172,9 @@ require('telescope').setup {
     --   ...
     -- }
     -- Now the picker_config_key will be applied every time you call this
-    -- builtin picker
+   find_files = {
+      theme = "dropdown",
+    }   -- builtin picker
   },
   extensions = {
     -- Your extension configuration goes here:
@@ -138,6 +184,8 @@ require('telescope').setup {
     -- please take a look at the readme of the extension you want to configure
   }
 }
+
+
 
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
@@ -227,13 +275,13 @@ cmp.setup({
     -- REQUIRED - you must specify a snippet engine
     expand = function(args)
       vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-      -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-      -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
-      -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+      require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+      require('snippy').expand_snippet(args.body) -- For `snippy` users.
+      vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
     end,
   },
   window = {
-    -- completion = cmp.config.window.bordered(),
+    completion = cmp.config.window.bordered(),
     -- documentation = cmp.config.window.bordered(),
   },
   mapping = cmp.mapping.preset.insert({
@@ -278,7 +326,9 @@ cmp.setup.cmdline(':', {
     { name = 'path' }
   }, {
     { name = 'cmdline' }
-  })
+  }),
+  revision = cmp.config.revision,
+  enabled = cmp.config.enabled
 })
 
 
